@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jay Shin</title>
+<meta name="description" content="Jay Shin, Data Science student at UC San Diego. Automation, dashboards, and machine learning.">
+<meta property="og:title" content="Jay Shin">
+<meta property="og:description" content="Data Science at UC San Diego. I turn messy operational data into tools people use every month.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231f4fd1'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-size='34' fill='white'>JS</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --surface: #ffffff;
+    --text: #1b1b1f;
+    --muted: #5d5d66;
+    --faint: #8a8a93;
+    --line: #e6e3dc;
+    --accent: #1f4fd1;
+    --accent-soft: #eaf0ff;
+    --serif: "Newsreader", Georgia, "Times New Roman", serif;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121214;
+      --surface: #1a1a1d;
+      --text: #ececef;
+      --muted: #a6a6b0;
+      --faint: #74747e;
+      --line: #2a2a2f;
+      --accent: #7c9cff;
+      --accent-soft: #1d2440;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121214;
+    --surface: #1a1a1d;
+    --text: #ececef;
+    --muted: #a6a6b0;
+    --faint: #74747e;
+    --line: #2a2a2f;
+    --accent: #7c9cff;
+    --accent-soft: #1d2440;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 16px; }
+  nav .brand { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--text); }
+  nav ul { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; font-size: 14px; }
+  nav ul a { color: var(--muted); }
+  nav ul a:hover { color: var(--text); text-decoration: none; }
+
+  header.hero {
+    padding: 64px 0 40px;
+    display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 56px; align-items: center;
+  }
+  .portrait {
+    margin: 0; aspect-ratio: 4 / 5; border-radius: 20px; overflow: hidden;
+    background: var(--surface); border: 1px solid var(--line);
+    box-shadow: 0 20px 50px -25px rgba(20, 30, 60, .35);
+  }
+  .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .tabbar {
+    position: sticky; top: 56px; z-index: 9;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    margin-top: 16px;
+  }
+  .tabbar [role="tablist"] {
+    display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+  }
+  .tabbar [role="tablist"]::-webkit-scrollbar { display: none; }
+  .tab {
+    flex: 1 0 auto; background: none; border: 0; cursor: pointer;
+    font: inherit; font-size: 15px; font-weight: 500; color: var(--muted);
+    padding: 16px 18px 14px; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; border-radius: 6px; }
+  [role="tabpanel"] { animation: fade .25s ease; }
+  [role="tabpanel"][hidden] { display: none; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin: 0 0 14px; }
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(40px, 7vw, 56px); line-height: 1.05; margin: 0 0 18px; letter-spacing: -0.01em;
+  }
+  .lede { font-size: 19px; color: var(--muted); max-width: 600px; margin: 0 0 28px; }
+  .lede strong { color: var(--text); font-weight: 500; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 16px; border-radius: 999px; font-size: 14px; font-weight: 500;
+    border: 1px solid var(--line); color: var(--text); background: var(--surface);
+  }
+  .btn:hover { border-color: var(--accent); text-decoration: none; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  :root[data-theme="dark"] .btn.primary { color: #0d0f17; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #0d0f17; } }
+  .btn svg { width: 16px; height: 16px; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    margin: 8px 0 24px;
+  }
+  .stat { background: var(--surface); padding: 18px 16px; }
+  .stat b { display: block; font-family: var(--serif); font-size: 30px; font-weight: 600; line-height: 1.1; }
+  .stat span { font-size: 13px; color: var(--muted); line-height: 1.4; display: block; margin-top: 4px; }
+
+  section { padding: 36px 0 56px; max-width: 780px; min-height: 420px; }
+  h2 {
+    font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint);
+    font-weight: 600; margin: 0 0 24px;
+  }
+  section h2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  h3 { font-size: 17px; font-weight: 600; margin: 0; }
+
+  .role { margin-bottom: 36px; }
+  .role:last-child { margin-bottom: 0; }
+  .role-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .meta { font-size: 14px; color: var(--muted); }
+  .when { font-size: 14px; color: var(--faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  ul.points { margin: 12px 0 0; padding-left: 18px; }
+  ul.points li { margin-bottom: 8px; color: var(--text); }
+  ul.points li::marker { color: var(--faint); }
+
+  .projects { display: grid; gap: 14px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px;
+  }
+  .card p { margin: 8px 0 12px; color: var(--muted); }
+  .card .result { color: var(--text); font-weight: 500; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .card-head a { font-size: 14px; }
+
+  .skills { display: grid; grid-template-columns: 160px 1fr; gap: 10px 20px; margin: 0; }
+  .skills dt { font-size: 14px; color: var(--muted); }
+  .skills dd { margin: 0; }
+
+  .edu-row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .edu-row:last-child { margin-bottom: 0; }
+
+  footer { padding: 40px 0 56px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .theme-toggle {
+    background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px;
+    padding: 4px 12px; font: inherit; font-size: 13px; cursor: pointer;
+  }
+
+  @media (max-width: 640px) {
+    nav ul { display: none; }
+    header.hero { padding: 32px 0 28px; grid-template-columns: 1fr; gap: 28px; }
+    .portrait { order: -1; width: 168px; aspect-ratio: 1; border-radius: 50%; }
+    .portrait img { object-position: 50% 12%; }
+    .tab { padding: 14px 12px 12px; font-size: 14px; }
+    section { min-height: 0; }
+    .lede { font-size: 17px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .skills { grid-template-columns: 1fr; gap: 2px; }
+    .skills dd { margin-bottom: 12px; }
+  }
+  @media (max-width: 860px) and (min-width: 641px) {
+    header.hero { gap: 32px; }
+  }
+  @media print {
+    nav, .theme-toggle, .actions, .tabbar { display: none; }
+    [role="tabpanel"][hidden] { display: block; }
+    section h2 { position: static !important; width: auto !important; height: auto !important; clip: auto !important; margin: 24px 0 16px !important; }
+    body { background: #fff; color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">Jay Shin</a>
+    <ul>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+  <header class="hero">
+    <div>
+    <p class="eyebrow">Data Science · UC San Diego · San Diego, CA</p>
+    <h1>Jay Shin</h1>
+    <p class="lede">
+      I turn messy operational data into tools people use every month.
+      At <strong>T1</strong> I automated bill collection, built HR dashboards, and trained the company on AI.
+      I am looking for <strong>data science and engineering internships</strong> for Summer 2027.
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="mailto:shinjay387@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        Email me
+      </a>
+      <a class="btn" href="Jay_Shin_Resume.pdf" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+        Resume
+      </a>
+      <a class="btn" href="#projects" id="projects-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Projects
+      </a>
+      <a class="btn" href="https://github.com/jayjys" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.08 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn" href="https://www.linkedin.com/in/jay-shin-a0318a222" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+        LinkedIn
+      </a>
+    </div>
+    </div>
+    <figure class="portrait">
+      <img src="jay.jpg" width="720" height="900" alt="Portrait of Jay Shin">
+    </figure>
+  </header>
+
+  <div class="stats" aria-label="Highlights">
+    <div class="stat"><b>~15 hrs</b><span>of manual work cut per month at T1</span></div>
+    <div class="stat"><b>100</b><span>employees trained on prompting and AI security</span></div>
+    <div class="stat"><b>0.97</b><span>R-squared on a calorie prediction model</span></div>
+    <div class="stat"><b>92.6%</b><span>accuracy classifying activity from accelerometer data</span></div>
+  </div>
+
+  <div class="tabbar">
+    <div role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" id="tab-experience" aria-controls="experience" aria-selected="true">Experience</button>
+      <button class="tab" role="tab" id="tab-projects" aria-controls="projects" aria-selected="false" tabindex="-1">Projects</button>
+      <button class="tab" role="tab" id="tab-skills" aria-controls="skills" aria-selected="false" tabindex="-1">Skills</button>
+      <button class="tab" role="tab" id="tab-education" aria-controls="education" aria-selected="false" tabindex="-1">Education</button>
+    </div>
+  </div>
+
+  <section id="experience" role="tabpanel" aria-labelledby="tab-experience">
+    <h2>Experience</h2>
+
+    <div class="role">
+      <div class="role-head">
+        <h3>T1 (SK Telecom Esports Organization)</h3>
+        <span class="when">Mar 2026 – Aug 2026</span>
+      </div>
+      <div class="meta">IT Operations Intern, Operations Department · Seoul, KR</div>
+      <ul class="points">
+        <li>Automated monthly utility-bill collection across 25 player accommodations, roughly 100 water, gas, electricity, and internet statements a month. Parsed encrypted email and crawled vendor portals with no API using headless browsing, cutting about 15 hours of manual work per month, and added a dashboard comparing cost by utility and period.</li>
+        <li>Built an HR operations dashboard covering about 100 employees from Flex attendance data, tracking core-hours compliance, remaining annual overtime, and how often and why work hours were edited. Automated the monthly overtime notices sent to every director and team lead.</li>
+        <li>Advised the C-suite on enterprise AI adoption. Interviewed every team lead to find the processes most worth automating, then compared RPA and agentic automation on security exposure, vendor cost, and ROI.</li>
+        <li>Wrote the company's AI governance materials, covering prompting standards and a code of conduct, and led prompt-engineering and AI security training for 100 employees.</li>
+        <li>Helped establish the company's first KPI framework for support departments, turning the qualitative attributes team leads proposed into measurable metrics.</li>
+        <li>Shipped three Google Apps Script tools syncing Sheets and Discord for the academy team, routing around Google IP throttling with a Cloudflare proxy layer.</li>
+      </ul>
+    </div>
+
+    <div class="role">
+      <div class="role-head">
+        <h3>Republic of Korea Army</h3>
+        <span class="when">Aug 2024 – Feb 2026</span>
+      </div>
+      <div class="meta">Korea Defense Intelligence Command (KDIC) · Mandatory national service</div>
+      <ul class="points">
+        <li>Led 50+ soldiers through training cycles and duty rotations across 18 months of service, in an intelligence unit that required strict information-handling discipline.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="projects" role="tabpanel" aria-labelledby="tab-projects" hidden>
+    <h2>Projects</h2>
+    <div class="projects">
+      <article class="card">
+        <div class="card-head">
+          <h3>Bill Tracker</h3>
+          <span><a href="https://bill-tracker-8bsj.onrender.com" target="_blank" rel="noopener">Live demo →</a> &nbsp; <a href="https://github.com/jayjys/bill-tracker" target="_blank" rel="noopener">GitHub →</a></span>
+        </div>
+        <p>A web app that reads utility bills from PDFs and forwarded emails, stores them in PostgreSQL, and shows where a household's money goes. It forecasts next month's bill from past usage and local weather, flags anomalies such as a likely water leak, and splits costs between roommates. <span class="result">93 automated tests; forecast backtest error 3.7–5.7% vs. 10–25% for a naive baseline, on synthetic demo data.</span></p>
+        <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">PostgreSQL</span><span class="tag">SQL</span><span class="tag">Docker</span><span class="tag">GitHub Actions</span></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <h3>Calorie Prediction Model</h3>
+          <a href="https://github.com/jshin1023/calorie-prediction-model" target="_blank" rel="noopener">View on GitHub →</a>
+        </div>
+        <p>A time-series model that predicts calorie expenditure from heart rate, steps, MET value, intensity, and weight. <span class="result">R-squared 0.97, MAE 0.105.</span></p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">NumPy</span><span class="tag">scikit-learn</span><span class="tag">seaborn</span><span class="tag">matplotlib</span></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><h3>Activity Classification Model</h3></div>
+        <p>Classifies walking, running, and cycling from accelerometer data with a random forest. I did the feature engineering and model evaluation. <span class="result">92.6% accuracy.</span></p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">NumPy</span><span class="tag">scikit-learn</span></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><h3>T1 Basecamp Cafe Sticker Campaign</h3></div>
+        <p>A live consumer web app built during my T1 internship. Cafe drink stickers carried a randomized "daily tier" and a QR code linking to detailed fortune metrics and promotional content.</p>
+        <div class="tags"><span class="tag">JavaScript</span><span class="tag">Web deployment</span><span class="tag">QR integration</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="skills" role="tabpanel" aria-labelledby="tab-skills" hidden>
+    <h2>Skills</h2>
+    <dl class="skills">
+      <dt>Programming</dt><dd>Python, R, SQL, Java, JavaScript (Google Apps Script), HTML/CSS, Git</dd>
+      <dt>Data &amp; analytics</dt><dd>pandas, NumPy, scikit-learn, Jupyter, Excel, Google Sheets, dashboard development</dd>
+      <dt>Automation &amp; web</dt><dd>Web crawling and parsing, headless browsing, REST APIs, Discord API, Cloudflare</dd>
+      <dt>Machine learning</dt><dd>Linear regression, random forest, time-series modeling</dd>
+    </dl>
+  </section>
+
+  <section id="education" role="tabpanel" aria-labelledby="tab-education" hidden>
+    <h2>Education &amp; certificates</h2>
+    <div class="edu-row">
+      <div>
+        <h3>University of California, San Diego</h3>
+        <div class="meta">B.S. in Data Science · Minor in Technology, Innovation and Supply Chain · GPA 3.83 / 4.00</div>
+      </div>
+      <span class="when">Sep 2023 – Expected Jun 2029</span>
+    </div>
+    <div class="edu-row">
+      <div>
+        <h3>SQLD (SQL Developer)</h3>
+        <div class="meta">Korea Data Agency</div>
+      </div>
+      <span class="when">Jun 2025</span>
+    </div>
+    <div class="edu-row">
+      <div>
+        <h3>ADsP (Advanced Data Analytics Semi-Professional)</h3>
+        <div class="meta">Korea Data Agency</div>
+      </div>
+      <span class="when">Mar 2025</span>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Jay Shin · <a href="mailto:shinjay387@gmail.com">shinjay387@gmail.com</a></span>
+    <button class="theme-toggle" id="theme" type="button" aria-label="Toggle color theme">Theme</button>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement, key = "theme";
+    try { var saved = localStorage.getItem(key); if (saved) root.setAttribute("data-theme", saved); } catch (e) {}
+    document.getElementById("theme").addEventListener("click", function () {
+      var dark = root.getAttribute("data-theme")
+        ? root.getAttribute("data-theme") === "dark"
+        : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var next = dark ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem(key, next); } catch (e) {}
+    });
+  })();
+
+  (function () {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    var bar = document.querySelector(".tabbar");
+    function show(id, scroll) {
+      var found = false;
+      tabs.forEach(function (t) {
+        var on = t.getAttribute("aria-controls") === id;
+        if (on) found = true;
+        t.setAttribute("aria-selected", on);
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+      if (!found) return show("experience", false);
+      if (scroll && bar.getBoundingClientRect().top > 60) {
+        window.scrollTo({ top: window.scrollY + bar.getBoundingClientRect().top - 56, behavior: "smooth" });
+      }
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener("click", function () {
+        var id = t.getAttribute("aria-controls");
+        history.replaceState(null, "", "#" + id);
+        show(id, false);
+      });
+      t.addEventListener("keydown", function (e) {
+        var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (!d) return;
+        var n = tabs[(i + d + tabs.length) % tabs.length];
+        n.focus(); n.click();
+      });
+    });
+    document.querySelectorAll('nav ul a, #projects-btn').forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var id = a.getAttribute("href").slice(1);
+        history.replaceState(null, "", "#" + id);
+        show(id, true);
+      });
+    });
+    show(location.hash.slice(1) || "experience", !!location.hash);
+  })();
+</script>
+</body>
+</html>
