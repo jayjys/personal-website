@@ -73,6 +73,8 @@
   nav ul { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; font-size: 14px; }
   nav ul a { color: var(--muted); }
   nav ul a:hover { color: var(--text); text-decoration: none; }
+  nav ul a[aria-current="true"] { color: var(--accent); }
+  .tabbar[hidden] { display: none; }
 
   header.hero {
     position: relative;
@@ -101,7 +103,7 @@
     background: color-mix(in srgb, var(--bg) 92%, transparent);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--line);
-    margin-top: 16px;
+    margin-top: -24px;
   }
   .tabbar [role="tablist"] {
     display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
@@ -140,13 +142,13 @@
   .stats {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
     background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
-    margin: 8px 0 24px; scroll-margin-top: 72px;
+    margin: 8px 0 64px; scroll-margin-top: 72px;
   }
   .stat { background: var(--surface); padding: 18px 16px; }
   .stat b { display: block; font-family: var(--serif); font-size: 30px; font-weight: 600; line-height: 1.1; }
   .stat span { font-size: 13px; color: var(--muted); line-height: 1.4; display: block; margin-top: 4px; }
 
-  section { padding: 36px 0 56px; max-width: 780px; min-height: 420px; }
+  section { padding: 36px 0 56px; max-width: 780px; min-height: 420px; scroll-margin-top: 108px; }
   h2 {
     font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint);
     font-weight: 600; margin: 0 0 24px;
@@ -189,7 +191,9 @@
   }
 
   @media (max-width: 640px) {
-    nav ul { display: none; }
+    nav ul { gap: 14px; font-size: 13px; overflow-x: auto; scrollbar-width: none; }
+    nav ul::-webkit-scrollbar { display: none; }
+    nav .brand { font-size: 18px; white-space: nowrap; }
     header.hero { padding: 28px 0 80px; grid-template-columns: 1fr; gap: 24px; align-content: center; }
     .portrait { order: -1; width: 168px; aspect-ratio: 1; border-radius: 50%; }
     .portrait img { object-position: 50% 12%; }
@@ -204,7 +208,7 @@
     header.hero { gap: 32px; }
   }
   @media print {
-    nav, .theme-toggle, .actions, .tabbar, .scroll-cue { display: none; }
+    nav, .theme-toggle, .actions, .tabbar, .scroll-cue { display: none !important; }
     header.hero { min-height: 0; }
     [role="tabpanel"][hidden] { display: block; }
     section h2 { position: static !important; width: auto !important; height: auto !important; clip: auto !important; margin: 24px 0 16px !important; }
@@ -262,8 +266,8 @@
     <figure class="portrait">
       <img src="jay.jpg" width="720" height="900" alt="Portrait of Jay Shin">
     </figure>
-    <a class="scroll-cue" href="#highlights" aria-label="Scroll to experience and projects">
-      Experience &amp; projects
+    <a class="scroll-cue" href="#highlights" aria-label="Scroll to highlights">
+      Highlights
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
     </a>
   </header>
@@ -271,11 +275,11 @@
   <div class="stats" id="highlights" aria-label="Highlights">
     <div class="stat"><b>~15 hrs</b><span>of manual work cut per month at T1</span></div>
     <div class="stat"><b>100</b><span>employees trained on prompting and AI security</span></div>
-    <div class="stat"><b>0.97</b><span>R-squared on a calorie prediction model</span></div>
+    <div class="stat"><b>Live</b><span>consumer web app shipped for the <a href="#projects" class="to-projects">T1 Basecamp cafe sticker campaign</a></span></div>
     <div class="stat"><b>92.6%</b><span>accuracy classifying activity from accelerometer data</span></div>
   </div>
 
-  <div class="tabbar">
+  <div class="tabbar" hidden>
     <div role="tablist" aria-label="Sections">
       <button class="tab" role="tab" id="tab-experience" aria-controls="experience" aria-selected="true">Experience</button>
       <button class="tab" role="tab" id="tab-projects" aria-controls="projects" aria-selected="false" tabindex="-1">Projects</button>
@@ -284,7 +288,7 @@
     </div>
   </div>
 
-  <section id="experience" role="tabpanel" aria-labelledby="tab-experience">
+  <section id="experience" role="tabpanel" aria-labelledby="tab-experience" hidden>
     <h2>Experience</h2>
 
     <div class="role">
@@ -319,6 +323,12 @@
     <h2>Projects</h2>
     <div class="projects">
       <article class="card">
+        <div class="card-head"><h3>T1 Basecamp Cafe Sticker Campaign</h3></div>
+        <p>A live consumer web app built during my T1 internship. Cafe drink stickers carried a randomized "daily tier" and a QR code linking to detailed fortune metrics and promotional content.</p>
+        <div class="tags"><span class="tag">JavaScript</span><span class="tag">Web deployment</span><span class="tag">QR integration</span></div>
+      </article>
+
+      <article class="card">
         <div class="card-head">
           <h3>Bill Tracker</h3>
           <span><a href="https://bill-tracker-8bsj.onrender.com" target="_blank" rel="noopener">Live demo →</a> &nbsp; <a href="https://github.com/jayjys/bill-tracker" target="_blank" rel="noopener">GitHub →</a></span>
@@ -341,12 +351,6 @@
         <p>Classifies walking, running, and cycling from accelerometer data with a random forest. I did the feature engineering and model evaluation. <span class="result">92.6% accuracy.</span></p>
         <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">NumPy</span><span class="tag">scikit-learn</span></div>
       </article>
-
-      <article class="card">
-        <div class="card-head"><h3>T1 Basecamp Cafe Sticker Campaign</h3></div>
-        <p>A live consumer web app built during my T1 internship. Cafe drink stickers carried a randomized "daily tier" and a QR code linking to detailed fortune metrics and promotional content.</p>
-        <div class="tags"><span class="tag">JavaScript</span><span class="tag">Web deployment</span><span class="tag">QR integration</span></div>
-      </article>
     </div>
   </section>
 
@@ -361,27 +365,13 @@
   </section>
 
   <section id="education" role="tabpanel" aria-labelledby="tab-education" hidden>
-    <h2>Education &amp; certificates</h2>
+    <h2>Education</h2>
     <div class="edu-row">
       <div>
         <h3>University of California, San Diego</h3>
         <div class="meta">B.S. in Data Science · Minor in Technology, Innovation and Supply Chain · GPA 3.83 / 4.00</div>
       </div>
       <span class="when">Sep 2023 – Expected Jun 2029</span>
-    </div>
-    <div class="edu-row">
-      <div>
-        <h3>SQLD (SQL Developer)</h3>
-        <div class="meta">Korea Data Agency</div>
-      </div>
-      <span class="when">Jun 2025</span>
-    </div>
-    <div class="edu-row">
-      <div>
-        <h3>ADsP (Advanced Data Analytics Semi-Professional)</h3>
-        <div class="meta">Korea Data Agency</div>
-      </div>
-      <span class="when">Mar 2025</span>
     </div>
   </section>
 </main>
@@ -409,27 +399,37 @@
 
   (function () {
     var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    var ids = tabs.map(function (t) { return t.getAttribute("aria-controls"); });
     var bar = document.querySelector(".tabbar");
+    var navLinks = Array.prototype.slice.call(document.querySelectorAll("nav ul a"));
+
+    // id = a section to open, or null for the home view (no tab bar, no sections).
     function show(id, scroll) {
-      var found = false;
+      if (ids.indexOf(id) < 0) id = null;
+      bar.hidden = !id;
       tabs.forEach(function (t) {
         var on = t.getAttribute("aria-controls") === id;
-        if (on) found = true;
         t.setAttribute("aria-selected", on);
-        t.tabIndex = on ? 0 : -1;
+        t.tabIndex = on || (!id && t === tabs[0]) ? 0 : -1;
         document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
       });
-      if (!found) return show("experience", false);
-      if (scroll && bar.getBoundingClientRect().top > 60) {
-        window.scrollTo({ top: window.scrollY + bar.getBoundingClientRect().top - 56, behavior: "smooth" });
+      navLinks.forEach(function (a) {
+        if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "true");
+        else a.removeAttribute("aria-current");
+      });
+      if (!id) return;
+      if (scroll) {
+        var top = window.scrollY + bar.getBoundingClientRect().top - 56;
+        window.scrollTo({ top: top, behavior: "smooth" });
       }
     }
+    function open(id, scroll) {
+      history.replaceState(null, "", id ? "#" + id : location.pathname + location.search);
+      show(id, scroll);
+    }
+
     tabs.forEach(function (t, i) {
-      t.addEventListener("click", function () {
-        var id = t.getAttribute("aria-controls");
-        history.replaceState(null, "", "#" + id);
-        show(id, false);
-      });
+      t.addEventListener("click", function () { open(t.getAttribute("aria-controls"), false); });
       t.addEventListener("keydown", function (e) {
         var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
         if (!d) return;
@@ -437,15 +437,20 @@
         n.focus(); n.click();
       });
     });
-    document.querySelectorAll('nav ul a, #projects-btn').forEach(function (a) {
+    navLinks.concat(Array.prototype.slice.call(document.querySelectorAll("#projects-btn, .to-projects"))).forEach(function (a) {
       a.addEventListener("click", function (e) {
         e.preventDefault();
-        var id = a.getAttribute("href").slice(1);
-        history.replaceState(null, "", "#" + id);
-        show(id, true);
+        open(a.getAttribute("href").slice(1), true);
       });
     });
-    show(location.hash.slice(1) || "experience", !!location.hash);
+    document.querySelector("nav .brand").addEventListener("click", function (e) {
+      e.preventDefault();
+      open(null);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    var initial = location.hash.slice(1);
+    show(ids.indexOf(initial) >= 0 ? initial : null, ids.indexOf(initial) >= 0);
   })();
 </script>
 </body>
